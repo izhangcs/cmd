@@ -1,5 +1,7 @@
 module github.com/go-xorm/cmd/xorm
 
+go 1.14
+
 require (
 	cloud.google.com/go v0.37.0 // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect

@@ -289,6 +289,7 @@ func runReverse(cmd *Command, args []string) {
 				}
 				// imports
 				tbs := []*core.Table{table}
+				fmt.Println(tbs)
 				imports := langTmpl.GenImports(tbs)
 
 				w, err := os.Create(path.Join(genDir, table.Name+ext))

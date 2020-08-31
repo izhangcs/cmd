@@ -21,7 +21,7 @@ var (
 	GoLangTmpl     LangTmpl = LangTmpl{
 		template.FuncMap{"Mapper": mapper.Table2Obj,
 			"Type":       typestring,
-			"Tag":        tag,
+			"Tag":        newTag,
 			"UnTitle":    unTitle,
 			"gt":         gt,
 			"getCol":     getCol,
@@ -198,6 +198,34 @@ func typestring(col *core.Column) string {
 		return "[]byte"
 	}
 	return s
+}
+
+func snakeString(s string) string {
+	data := make([]byte, 0, len(s)*2)
+	j := false
+	num := len(s)
+	for i := 0; i < num; i++ {
+		d := s[i]
+		if i > 0 && d >= 'A' && d <= 'Z' && j {
+			data = append(data, '_')
+		}
+		if d != '_' {
+			j = true
+		}
+		data = append(data, d)
+	}
+	return strings.ToLower(string(data[:]))
+}
+
+func newTag(table *core.Table, col *core.Column) string {
+	var res []string
+	// `xorm:"ID" json:"id" form:"id" url:"id"`
+	res = append(res, "xorm:\"" + col.Name +  "\"")
+	lowName := snakeString(col.Name)
+	res = append(res, "json:\"" + lowName +  "\"")
+	res = append(res, "form:\"" + lowName +  "\"")
+	res = append(res, "url:\"" + lowName +  "\"")
+	return "`" + strings.Join(res, " ") + "`"
 }
 
 func tag(table *core.Table, col *core.Column) string {
